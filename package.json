@@ -1,0 +1,24 @@
+{
+  "name": "humanage-1",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "exceljs": "^4.4.0",
+    "jspdf": "^3.0.4",
+    "jspdf-autotable": "^5.0.2",
+    "react-router-dom": "^7.10.0"
+  },
+  "devDependencies": {
+    "vite": "^7.2.6"
+  }
+}
