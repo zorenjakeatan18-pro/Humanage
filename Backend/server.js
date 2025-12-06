@@ -28,7 +28,7 @@ app.use(cors({
     'http://localhost:3000',      // Create React App
     'http://localhost:5173',      // Vite default port
     'http://localhost:5174',      // Vite alternative port
-    'https://humanage-2css.vercel.app',  // ✅ FIXED: No trailing slash
+    'https://humanage-mu.vercel.app',  // ✅ FIXED: No trailing slash
     process.env.CLIENT_URL
   ].filter(Boolean),
   credentials: true,
@@ -244,7 +244,7 @@ const server = app.listen(PORT, () => {
   console.log(`\n✅ CORS enabled for:`);
   console.log(`   - http://localhost:3000 (React)`);
   console.log(`   - http://localhost:5173 (Vite)`);
-  console.log(`   - https://humanage-2css.vercel.app ✅`);
+  console.log(`   - https://humanage-mu.vercel.app✅`);
   console.log(`\n✅ Allowed Headers:`);
   console.log(`   - Content-Type`);
   console.log(`   - Authorization`);
