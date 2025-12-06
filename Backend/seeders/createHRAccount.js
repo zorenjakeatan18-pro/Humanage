@@ -26,16 +26,16 @@ const connectDB = async () => {
 // Create HR Account
 const createHRAccount = async () => {
   try {
-    console.log('🌱 Creating HR Account...\n');
+    console.log('🌱 Creating HR Accounts...\n');
 
     // Connect to database
     await connectDB();
 
-    // HR Account data
-    const hrAccount = {
+    // HR Account data - First Account
+    const hrAccount1 = {
       name: 'HR Admin',
       email: 'hr@humanage.com',
-      password: 'hr123456',  // Changed to 8 characters (meets 6+ requirement)
+      password: 'hr123456',
       role: 'admin',
       department: 'HR Staff',
       position: 'HR Administrator',
@@ -45,33 +45,56 @@ const createHRAccount = async () => {
       isActive: true
     };
 
-    console.log('Checking for existing account...');
-    // Check if account already exists
-    const existing = await User.findOne({ email: hrAccount.email });
-    
-    if (existing) {
-      console.log('⚠️  HR account already exists!');
-      console.log(`   Email: ${existing.email}`);
-      console.log('   Updating password...\n');
+    // HR Account data - Second Account
+    const hrAccount2 = {
+      name: 'HR Manager',
+      email: 'hrmanager@humanage.com',
+      password: 'hrmanager123',
+      role: 'admin',
+      department: 'HR Staff',
+      position: 'HR Manager',
+      avatar: 'HM',
+      phone: '09187654321',
+      bio: 'HR manager with full system access',
+      isActive: true
+    };
+
+    const accounts = [hrAccount1, hrAccount2];
+
+    // Process each account
+    for (const hrAccount of accounts) {
+      console.log(`\nProcessing: ${hrAccount.email}`);
+      console.log('Checking for existing account...');
       
-      // Update password
-      existing.password = hrAccount.password;
-      await existing.save();
-      console.log('✅ Password updated!\n');
-    } else {
-      console.log('Creating new account...');
-      // Create new account
-      const user = await User.create(hrAccount);
-      console.log('✅ HR Account Created!\n');
+      const existing = await User.findOne({ email: hrAccount.email });
+      
+      if (existing) {
+        console.log(`⚠️  Account already exists: ${existing.email}`);
+        console.log('   Updating password...');
+        
+        existing.password = hrAccount.password;
+        await existing.save();
+        console.log('✅ Password updated!');
+      } else {
+        console.log('Creating new account...');
+        await User.create(hrAccount);
+        console.log(`✅ Account Created: ${hrAccount.email}`);
+      }
     }
 
     // Display credentials
-    console.log('╔═══════════════════════════════════════════╗');
+    console.log('\n╔═══════════════════════════════════════════╗');
     console.log('║         HR ACCOUNT CREDENTIALS            ║');
     console.log('╠═══════════════════════════════════════════╣');
     console.log('║                                           ║');
+    console.log('║  Account 1:                               ║');
     console.log('║  Email:    hr@humanage.com                ║');
     console.log('║  Password: hr123456                       ║');
+    console.log('║  Role:     admin                          ║');
+    console.log('║                                           ║');
+    console.log('║  Account 2:                               ║');
+    console.log('║  Email:    hrmanager@humanage.com         ║');
+    console.log('║  Password: hrmanager123                   ║');
     console.log('║  Role:     admin                          ║');
     console.log('║                                           ║');
     console.log('╚═══════════════════════════════════════════╝');
