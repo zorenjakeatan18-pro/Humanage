@@ -1,4 +1,4 @@
-// server.js - Main Express Server (FIXED CORS for x-requested-with)
+// server.js - Main Express Server (FIXED CORS and Routes)
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
@@ -22,13 +22,13 @@ const app = express();
 connectDB();
 
 // 🔒 SECURITY: CORS - MUST BE FIRST (before other middleware)
-// ✅ FIXED: Added 'x-requested-with' to allowedHeaders
+// ✅ FIXED: Removed trailing slash from Vercel URL
 app.use(cors({
   origin: [
     'http://localhost:3000',      // Create React App
     'http://localhost:5173',      // Vite default port
     'http://localhost:5174',      // Vite alternative port
-    'https://humanage-2css.vercel.app',
+    'https://humanage-2css.vercel.app',  // ✅ FIXED: No trailing slash
     process.env.CLIENT_URL
   ].filter(Boolean),
   credentials: true,
@@ -36,8 +36,8 @@ app.use(cors({
   allowedHeaders: [
     'Content-Type', 
     'Authorization',
-    'X-Requested-With',      // ✅ FIXED: Added this header
-    'X-Client-Version'       // ✅ FIXED: Added this header
+    'X-Requested-With',
+    'X-Client-Version'
   ],
   exposedHeaders: ['Content-Length', 'X-Request-Id'],
   maxAge: 86400 // 24 hours
@@ -114,6 +114,25 @@ if (process.env.NODE_ENV !== 'production') {
   });
 }
 
+// ✅ NEW: Root route handler
+app.get('/', (req, res) => {
+  res.json({
+    success: true,
+    message: 'HumanAge API Server',
+    version: '1.0.0',
+    endpoints: {
+      health: '/health',
+      auth: '/api/auth',
+      employees: '/api/employees',
+      attendance: '/api/attendance',
+      payroll: '/api/payroll',
+      performance: '/api/performance',
+      dashboard: '/api/dashboard'
+    },
+    documentation: 'API is running. Use /api/* endpoints'
+  });
+});
+
 // Health check
 app.get('/health', (req, res) => {
   res.json({
@@ -121,6 +140,24 @@ app.get('/health', (req, res) => {
     timestamp: new Date().toISOString(),
     uptime: process.uptime(),
     environment: process.env.NODE_ENV || 'development'
+  });
+});
+
+// ✅ NEW: API root route
+app.get('/api', (req, res) => {
+  res.json({
+    success: true,
+    message: 'HumanAge API v1.0',
+    endpoints: [
+      'POST /api/auth/login',
+      'POST /api/auth/register',
+      'GET /api/auth/me',
+      'GET /api/employees',
+      'GET /api/attendance',
+      'GET /api/payroll',
+      'GET /api/performance',
+      'GET /api/dashboard/stats'
+    ]
   });
 });
 
@@ -139,7 +176,8 @@ app.use((req, res) => {
   res.status(404).json({ 
     success: false,
     message: 'Route not found',
-    path: req.path 
+    path: req.path,
+    availableRoutes: ['/', '/health', '/api', '/api/auth', '/api/employees', '/api/attendance', '/api/payroll', '/api/performance', '/api/dashboard']
   });
 });
 
@@ -206,10 +244,11 @@ const server = app.listen(PORT, () => {
   console.log(`\n✅ CORS enabled for:`);
   console.log(`   - http://localhost:3000 (React)`);
   console.log(`   - http://localhost:5173 (Vite)`);
+  console.log(`   - https://humanage-2css.vercel.app ✅`);
   console.log(`\n✅ Allowed Headers:`);
   console.log(`   - Content-Type`);
   console.log(`   - Authorization`);
-  console.log(`   - X-Requested-With ✅`);
+  console.log(`   - X-Requested-With`);
   console.log(`   - X-Client-Version`);
   console.log(`\n✅ Ready to accept connections\n`);
 });
