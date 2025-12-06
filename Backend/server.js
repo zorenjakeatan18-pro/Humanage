@@ -28,7 +28,7 @@ app.use(cors({
     'http://localhost:3000',      // Create React App
     'http://localhost:5173',      // Vite default port
     'http://localhost:5174',      // Vite alternative port
-    'https://humanage-2css.vercel.app/',
+    'https://humanage-2css.vercel.app',
     process.env.CLIENT_URL
   ].filter(Boolean),
   credentials: true,
